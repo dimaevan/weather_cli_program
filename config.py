@@ -1,5 +1,10 @@
-with open("api_key.txt") as f:
-    api = f.readline()
+api = None
+
+try:
+    with open("api_key.txt") as f:
+        api = f.readline()
+except FileNotFoundError:
+    print("API file not found")
 
 
 USE_ROUNDED_COORDS = True
@@ -10,6 +15,3 @@ OPENWEATHER_URL = (
 "appid=" + OPENWEATHER_API + "&lang=ru&"
 "units=metric"
 )
-
-if __name__ == "__main__":
-    print(api)
