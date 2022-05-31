@@ -2,3 +2,5 @@
 .code/
 __pycache__/
 api_key.txt
+.mypy_cache
+.venv

@@ -38,6 +38,7 @@ def get_geo(ip) -> Coordinates:
     try:
         res = requests.get(f"http://ip-api.com/json/{ip}")
         geo = res.json()
+        print(f"Your ip is {ip}.Your city is {geo['city']}")
     except (ConnectionError, RequestException):
         raise CantGetCoordinates
     return Coordinates(latitude=geo['lat'], longitude=geo['lon'])
