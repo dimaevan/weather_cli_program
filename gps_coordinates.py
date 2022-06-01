@@ -1,8 +1,9 @@
+import json
 from dataclasses import dataclass
 from exceptions import CantGetCoordinates
 
 import config
-import requests
+import urllib.request
 from requests.exceptions import RequestException
 
 
@@ -22,27 +23,32 @@ def get_gps_coordinates() -> Coordinates:
 def _round_coordinates(coordinates: Coordinates) -> Coordinates:
     if not config.USE_ROUNDED_COORDS:
         return coordinates
-    return Coordinates(*map(lambda c: round(c, 1), [coordinates.latitude, coordinates.longitude]))
+    return Coordinates(*map(lambda c: round(c, 1),
+                            [coordinates.latitude, coordinates.longitude]))
 
 
 def get_ip() -> str:
+    url = "https://api.ipify.org/?format=json"
     try:
-        res = requests.get("https://api.ipify.org/?format=json")
-        ip = res.json()['ip']
+        with urllib.request.urlopen(url) as resp:
+            ip = resp.read().decode()
+            result = json.loads(ip)['ip']
     except (ConnectionError, RequestException):
         raise CantGetCoordinates
-    return ip
+    return result
 
 
 def get_geo(ip) -> Coordinates:
+    url = f"http://ip-api.com/json/{ip}"
     try:
-        res = requests.get(f"http://ip-api.com/json/{ip}")
-        geo = res.json()
-        print(f"Your ip is {ip}.Your city is {geo['city']}")
+        with urllib.request.urlopen(url) as resp:
+            response = resp.read().decode()
+            geo = json.loads(response)
+        print(f"Your ip is {ip}. Your city is {geo['city']}")
     except (ConnectionError, RequestException):
         raise CantGetCoordinates
     return Coordinates(latitude=geo['lat'], longitude=geo['lon'])
 
 
 if __name__ == "__main__":
-    print(get_gps_coordinates())
+    get_gps_coordinates()

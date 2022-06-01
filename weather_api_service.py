@@ -89,7 +89,8 @@ def _parse_temperature(openweather_dict: dict) -> Celsius:
     return round(openweather_dict['main']['temp'])
 
 
-def _parse_sun_time(openweather_dict: dict, time: Literal['sunrise'] | Literal['sunset']) -> datetime:
+def _parse_sun_time(openweather_dict: dict,
+                    time: Literal['sunrise'] | Literal['sunset']) -> datetime:
     return datetime.fromtimestamp(openweather_dict['sys'][time])
 
 
