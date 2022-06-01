@@ -4,3 +4,5 @@ __pycache__/
 api_key.txt
 .mypy_cache
 .venv
+.mypy_cache/
+history.txt
